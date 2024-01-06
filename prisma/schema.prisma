@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  username String @unique
+  password String
+
+  createdAt DateTime    @default(now())
+  CheckList CheckList[]
+  Task      Task[]
+}
+
+model CheckList {
+  id   String @id @default(uuid())
+  name String
+
+  isDeleted Boolean @default(false)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tasks Task[]
+}
+
+model Task {
+  id   String @id @default(uuid())
+  name String
+
+  isDeleted Boolean @default(false)
+
+  checklistId String
+  checklist   CheckList @relation(fields: [checklistId], references: [id])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
