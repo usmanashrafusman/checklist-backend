@@ -9,16 +9,20 @@ import { Request } from "src/types";
 export class AuthMiddleware implements NestMiddleware {
     constructor(private readonly utilsService: UtilsService) { }
     async use(req: Request, _: Response, next: NextFunction) {
-        const token = req.headers["authorization"] as string;
-        if (!token) {
-            throw new UnauthorizedException(ERROR_CODES.UNAUTHORIZED);
-        }
+        try {
+            const token = req.headers["authorization"] || req.headers["Authorization"] as string;
+            if (!token) {
+                throw new UnauthorizedException(ERROR_CODES.UNAUTHORIZED);
+            }
 
-        const user = this.utilsService.decodeToken(token);
-        if (!user) {
+            const user = this.utilsService.decodeToken(token);
+            if (!user) {
+                throw new UnauthorizedException(ERROR_CODES.UNAUTHORIZED);
+            }
+            req.user = user;
+            next();
+        } catch (error) {
             throw new UnauthorizedException(ERROR_CODES.UNAUTHORIZED);
         }
-        req.user = user;
-        next();
     }
 }
