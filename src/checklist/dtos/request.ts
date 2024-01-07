@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsString, IsNotEmpty, IsArray, ValidateNested, IsBoolean } from 'class-validator';
 
 export class CheckList {
@@ -11,11 +12,11 @@ export class CheckList {
 
     @IsBoolean()
     isDeleted: boolean
-    
 }
 
 export class CheckLists {
     @IsArray()
     @ValidateNested({ each: true })
+    @Type(() => CheckList)
     data: CheckList[]
 }
