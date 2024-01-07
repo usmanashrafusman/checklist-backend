@@ -71,10 +71,7 @@ export class TaskService {
   }
 
   async pull(timeStamp: number, userId: string) {
-    const where: Prisma.TaskWhereInput = {
-      userId,
-      isDeleted: false,
-    }
+    const where: Prisma.TaskWhereInput = { userId }
     if (timeStamp) {
       where.updatedAt = {
         gte: new Date(timeStamp)
