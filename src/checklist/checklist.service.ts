@@ -59,10 +59,7 @@ export class CheckListService {
   }
 
   async pull(timeStamp: number, userId: string) {
-    const where: Prisma.CheckListWhereInput = {
-      userId,
-      isDeleted: false,
-    }
+    const where: Prisma.CheckListWhereInput = {userId}
     if (timeStamp) {
       where.updatedAt = {
         gte: new Date(timeStamp)
